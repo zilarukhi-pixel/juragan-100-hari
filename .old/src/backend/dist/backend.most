@@ -1,0 +1,166 @@
+// Version: 4.0.0
+type AccessControlState__201339279 =
+  {
+    var adminAssigned : Bool;
+    userRoles : Map__230067015<Principal, UserRole__91647283>
+  };
+type Challenge__417496989 =
+  {
+    createdAt : Timestamp__301639476;
+    startDay : DayKey__453116133;
+    target : Nat
+  };
+type Challenge__746550074 = {createdAt : Int; startDay : Nat; target : Nat};
+type Data__44217153<K, V> = {var count : Nat__227979830; kvs : [var ?(K, V)]};
+type Data__846125122<T> = {var count : Nat__227979830; elements : [var ?T]};
+type DayKey__453116133 = Nat;
+type Internal__23036296<T> =
+  {children : [var ?Node__620761243<T>]; data : Data__846125122<T>};
+type Internal__283199666<K, V> =
+  {children : [var ?Node__204828119<K, V>]; data : Data__44217153<K, V>};
+type Leaf__598469445<K, V> = {data : Data__44217153<K, V>};
+type Leaf__948582970<T> = {data : Data__846125122<T>};
+type Map__230067015<K, V> = Map__405889023<K, V>;
+type Map__405889023<K, V> = Map__603270868<K, V>;
+type Map__603270868<K, V> =
+  {var root : Node__204828119<K, V>; var size : Nat__227979830};
+type Nat__227979830 = Nat__920180692;
+type Nat__920180692 = Nat;
+type NewActor__769816496 =
+  {
+    accessControlState : AccessControlState__201339279;
+    challengeStore : Map__230067015<Principal, Challenge__746550074>;
+    done : Map__230067015<Principal, Set__70493310<Nat>>;
+    favorites : Map__230067015<Principal, Set__70493310<Nat>>;
+    questions : Map__230067015<Nat, QuizQuestion__940688692>;
+    quizResults :
+      Map__230067015<Principal, Map__230067015<Nat, QuizResult__923727698>>;
+    salesEntries :
+      Map__230067015<Principal, Map__230067015<Nat, SalesEntry__400735220>>;
+    tips : Map__230067015<Nat, Tip__453991859>
+  };
+type Node__204828119<K, V> =
+  {#internal : Internal__283199666<K, V>; #leaf : Leaf__598469445<K, V>};
+type Node__620761243<T> =
+  {#internal : Internal__23036296<T>; #leaf : Leaf__948582970<T>};
+type OldActor__512397517 = {};
+type Platform__1020897877 = {#lazada; #shopee; #tiktokShop};
+type Platform__820226475 = {#lazada; #shopee; #tiktokShop};
+type QuizQuestion__1018989727 =
+  {
+    correctIndex : Nat;
+    day : DayKey__453116133;
+    explanation : Text;
+    id : Nat;
+    options : [Text];
+    prompt : Text
+  };
+type QuizQuestion__940688692 =
+  {
+    correctIndex : Nat;
+    day : Nat;
+    explanation : Text;
+    id : Nat;
+    options : [Text];
+    prompt : Text
+  };
+type QuizResult__342602663 =
+  {
+    completedAt : Timestamp__301639476;
+    day : DayKey__453116133;
+    points : Nat;
+    score : Nat;
+    total : Nat
+  };
+type QuizResult__923727698 =
+  {completedAt : Int; day : Nat; points : Nat; score : Nat; total : Nat};
+type SalesEntry__35995259 =
+  {
+    day : DayKey__453116133;
+    platform : Platform__1020897877;
+    quantity : Nat;
+    updatedAt : Timestamp__301639476
+  };
+type SalesEntry__400735220 =
+  {
+    day : Nat;
+    platform : Platform__820226475;
+    quantity : Nat;
+    updatedAt : Int
+  };
+type Set__1053317950<T> =
+  {var root : Node__620761243<T>; var size : Nat__227979830};
+type Set__70493310<T> = Set__1053317950<T>;
+type Timestamp__301639476 = Int;
+type TipTheme__168904468 =
+  {#analisisData; #konten; #layananPelanggan; #listing; #promosi};
+type TipTheme__508522407 =
+  {#analisisData; #konten; #layananPelanggan; #listing; #promosi};
+type Tip__314053853 =
+  {
+    actionStep : Text;
+    day : DayKey__453116133;
+    id : Nat;
+    platform : Platform__1020897877;
+    summary : Text;
+    theme : TipTheme__168904468;
+    title : Text
+  };
+type Tip__453991859 =
+  {
+    actionStep : Text;
+    day : Nat;
+    id : Nat;
+    platform : Platform__820226475;
+    summary : Text;
+    theme : TipTheme__508522407;
+    title : Text
+  };
+type UserRole__91647283 = {#admin; #guest; #user};
+{
+  "00000000_000000" : OldActor__512397517 -> NewActor__769816496
+}
+actor  {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__230067015<Principal, UserRole__91647283>
+    };
+  stable challengeStore :
+    {
+      var root : Node__204828119<Principal, Challenge__417496989>;
+      var size : Nat__227979830
+    };
+  stable done :
+    {
+      var root : Node__204828119<Principal, Set__70493310<Nat>>;
+      var size : Nat__227979830
+    };
+  stable favorites :
+    {
+      var root : Node__204828119<Principal, Set__70493310<Nat>>;
+      var size : Nat__227979830
+    };
+  stable questions :
+    {
+      var root : Node__204828119<Nat, QuizQuestion__1018989727>;
+      var size : Nat__227979830
+    };
+  stable quizResults :
+    {
+      var root :
+        Node__204828119<Principal, Map__230067015<Nat, QuizResult__342602663>>;
+      var size : Nat__227979830
+    };
+  stable salesEntries :
+    {
+      var root :
+        Node__204828119<Principal, Map__230067015<Nat, SalesEntry__35995259>>;
+      var size : Nat__227979830
+    };
+  stable tips :
+    {
+      var root : Node__204828119<Nat, Tip__314053853>;
+      var size : Nat__227979830
+    }
+};

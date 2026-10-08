@@ -1,0 +1,194 @@
+type Value = 
+ variant {
+   "bool": bool;
+   float: float64;
+   "int": int;
+   "nat": nat;
+   "null";
+   "text": text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type TipView = 
+ record {
+   actionStep: text;
+   day: DayKey;
+   done: bool;
+   favorite: bool;
+   id: nat;
+   platform: Platform;
+   summary: text;
+   theme: TipTheme;
+   title: text;
+ };
+type TipTheme = 
+ variant {
+   analisisData;
+   konten;
+   layananPelanggan;
+   listing;
+   promosi;
+ };
+type Timestamp = int;
+type SalesEntry = 
+ record {
+   day: DayKey;
+   platform: Platform;
+   quantity: nat;
+   updatedAt: Timestamp;
+ };
+type Result__1 = 
+ variant {
+   err: Error;
+   ok;
+ };
+type Result = 
+ record {
+   hasMore: bool;
+   rows: vec vec Cell;
+ };
+type QuizSubmission = 
+ record {
+   day: DayKey;
+   feedback: vec QuizAnswerFeedback;
+   points: nat;
+   score: nat;
+   total: nat;
+ };
+type QuizResult = 
+ record {
+   completedAt: Timestamp;
+   day: DayKey;
+   points: nat;
+   score: nat;
+   total: nat;
+ };
+type QuizQuestionView = 
+ record {
+   id: nat;
+   options: vec text;
+   prompt: text;
+ };
+type QuizAnswerFeedback = 
+ record {
+   chosenIndex: nat;
+   correct: bool;
+   correctIndex: nat;
+   explanation: text;
+   questionId: nat;
+ };
+type Platform = 
+ variant {
+   lazada;
+   shopee;
+   tiktokShop;
+ };
+type Milestone = 
+ record {
+   thresholdPercent: nat;
+   title: text;
+   unlocked: bool;
+ };
+type Error = 
+ variant {
+   AmbiguousAttribute: record {
+                         field: text;
+                         sources: vec text;
+                       };
+   FrontendOriginMismatch: record {
+                             expected: vec text;
+                             got: text;
+                           };
+   FrontendOriginsNotConfigured;
+   MalformedCandid;
+   MissingField: text;
+   MixedSsoSources: record {
+                      otherKeys: vec text;
+                      ssoKeys: vec text;
+                    };
+   NoAttributes;
+   Stale: record {ageNs: nat;};
+   UnknownNonce;
+   UntrustedSsoSource: record {domain: text;};
+ };
+type DayKey = nat;
+type ChallengeProgress = 
+ record {
+   currentStreak: nat;
+   dayNumber: nat;
+   daysRemaining: nat;
+   milestones: vec Milestone;
+   perPlatform: vec record {
+                      Platform;
+                      nat;
+                    };
+   percent: nat;
+   target: nat;
+   totalSold: nat;
+ };
+type Challenge = 
+ record {
+   createdAt: Timestamp;
+   startDay: DayKey;
+   target: nat;
+ };
+type Cell = 
+ record {
+   name: text;
+   value: Value;
+ };
+service : {
+  _initialize_access_control: () -> ();
+  _internet_identity_sign_in_finish: () -> (Result__1);
+  _internet_identity_sign_in_start: () -> (blob);
+  /// Add a tip to the caller's favorites.
+  addFavorite: (tipId: nat) -> ();
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  execute: (qJson: text) -> (Result) query;
+  /// Return the backend API documentation as Markdown.
+  getApiDoc: () -> (text) query;
+  getCallerUserRole: () -> (UserRole) query;
+  /// Return the caller's challenge configuration.
+  getChallenge: () -> (opt Challenge) query;
+  /// Return the caller's aggregate challenge progress.
+  getProgress: () -> (opt ChallengeProgress) query;
+  /// Return the caller's quiz result for a given day, if played.
+  getQuizResult: (day: DayKey) -> (opt QuizResult) query;
+  /// Return today's quiz questions (correct answers withheld).
+  getTodayQuiz: () -> (vec QuizQuestionView) query;
+  /// Return the tip scheduled for today.
+  getTodayTip: () -> (opt TipView) query;
+  isCallerAdmin: () -> (bool) query;
+  /// Return the caller's favorite tips.
+  listFavorites: () -> (vec TipView) query;
+  /// Return the caller's quiz history, newest first.
+  listQuizHistory: () -> (vec QuizResult) query;
+  /// Return the caller's sales history, newest first, optionally filtered by
+  /// platform and an inclusive day range.
+  listSales: (platform: opt Platform, fromDay: opt DayKey, toDay:
+   opt DayKey) -> (vec SalesEntry) query;
+  /// Browse the tip archive, optionally filtered by day, platform, and theme.
+  listTips: (day: opt DayKey, platform: opt Platform, theme: opt TipTheme) ->
+   (vec TipView) query;
+  /// Mark a tip as done for the caller.
+  markTipDone: (tipId: nat) -> ();
+  /// Record or update the caller's sales for a day.
+  recordSales: (day: DayKey, quantity: nat, platform: Platform) ->
+   (SalesEntry);
+  /// Remove a tip from the caller's favorites.
+  removeFavorite: (tipId: nat) -> ();
+  schema: () -> (text) query;
+  /// Start the caller's 100-day challenge.
+  startChallenge: (target: nat, startDay: DayKey) -> (Challenge);
+  /// Submit the caller's answers for today's quiz.
+  submitQuiz: (answers: vec record {
+                              nat;
+                              nat;
+                            }) -> (QuizSubmission);
+  /// Remove the caller's done mark from a tip.
+  unmarkTipDone: (tipId: nat) -> ();
+}
